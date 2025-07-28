@@ -9,6 +9,7 @@ const PORT = 3001;
 
 app.use(cookieParser());
 app.use(userTracking);
+app.use(express.json());
 
 app.use('/api/habits', habitRoutes);
 

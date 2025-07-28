@@ -4,5 +4,4 @@ export interface habit {
     name: string;
     frequency: string;
     streak: number;
-
 }
