@@ -27,8 +27,16 @@ db.serialize(() => {
     name TEXT NOT NULL,              -- display name
     frequency TEXT,
     streak INTEGER DEFAULT 0,
-    FOREIGN KEY (userId) REFERENCES users(id)
-    -- no password field yet if you're not doing login
+    FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+  )
+`),
+    db.run(`
+  CREATE TABLE IF NOT EXISTS habitEntries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    habitId INTEGER NOT NULL,
+    completedAt TEXT,
+    comment TEXT,
+    FOREIGN KEY (habitId) REFERENCES habits(id) ON DELETE CASCADE
   )
 `)
 })
