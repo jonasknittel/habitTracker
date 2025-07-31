@@ -5,13 +5,13 @@ import db from '../db/database';
 export const getUser = (req: UserRequest, res: Response) => {
     const userId = req.userId;
 
-    db.all('SELECT * FROM users WHERE userID = ?',
+    db.all('SELECT * FROM users WHERE id = ?',
         [userId], (err, row) => {
             if (err) {
                 console.error('DB error:', err.message);
                 return res.status(500).json({ error: 'Database error' });
             }
-
+            console.log(row);
             res.json(row);
         }
     )
