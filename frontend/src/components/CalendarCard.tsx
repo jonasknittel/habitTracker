@@ -5,7 +5,7 @@ import styles from "./CalendarCard.module.css";
 export default function CalendarCard() {
 
     const status = true;
-    const weekdays = ["mo", "tu", "wed", "thu", "fri", "sat", "sun"];
+    const weekdays = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
 
     const today = new Date();
     const weekday = today.getDay() === 0 ? 7 : today.getDay();
@@ -24,17 +24,67 @@ export default function CalendarCard() {
 
 
     return (
-        <Card style={{ display: "flex", justifyContent: "center"}}>
-            <div style={{ backgroundColor: "yellow", display: "flex", justifyContent: "space-evenly", height: "20vw", width: "85vw" }}>
-                <div style={{ display: "flex", flexDirection:"column", alignItems:"center", justifyContent:"space-evenly", backgroundColor: "red", width: "3%" }}>
+        <Card style={{ display: "flex", justifyContent: "center" }}>
+            <div style={{ border: "1px", display: "flex", justifyContent: "space-evenly", height: "20vw", width: "85vw", gap: "8px" }}>
+                <div 
+                    style={{ 
+                        display: "flex", 
+                        flexDirection:"column",
+                        justifyContent:"space-evenly", 
+                        width: "4%",
+                        }}>
                     {Array.from({ length: 7 }).map((_, i) => (
-                        <div style={{ backgroundColor: "green"}}>{weekdays[i]}</div>
+                        <div key={i} 
+                            style={{ 
+                                width: "100%", 
+                                height:"13%", 
+                                display: "flex",
+                                alignItems: "center",
+                                fontWeight: "bold"
+                            }}>{weekdays[i]}</div>
                     ))}
                 </div>
                 {Array.from({ length: 25 }).map((_, j) => (
-                    <div style={{ display: "flex", flexDirection:"column", alignItems:"center", justifyContent:"space-evenly", backgroundColor: "red", width: "3.5%" }}>
+                    <div key={j} style={{ display: "flex", flexDirection:"column", gap: "8px", alignItems:"center", justifyContent:"space-evenly", width: "3.5%" }}>
                     {Array.from({ length: 7 }).map((_, i) => (
-                        <div style={{ backgroundColor: "green", width: "90%", height:"13%", borderRadius:"25%", textAlign:"center" }}>{days[j][6 - i].getDate()}</div>
+                        (days[j][6 - i] < today) ? (
+                            <div key={i} 
+                                style={{ 
+                                    backgroundColor: (Math.random() < 0.7) ? "#FADF63" : "#D3D3D3", // random color generator
+                                    width: "90%", 
+                                    height:"13%", 
+                                    borderRadius:"25%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    textAlign:"center",
+                                    fontWeight: "bold"
+                                }}>
+                                    {days[j][6 - i].getDate()}
+                                </div>
+                         ) : (
+                            <div key={i} 
+                                style={{ 
+                                    width: "90%", 
+                                    height:"13%", 
+                                    borderRadius:"25%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    textAlign:"center",
+                                    fontWeight: "bold"
+                                }}>
+                                <div key={i}
+                                    style={{
+                                        width: ".5vw", 
+                                        height:".5vw",
+                                        borderRadius: "50%",
+                                        backgroundColor: "#D3D3D3"
+                                    }}>
+
+                                    </div>
+                                </div>
+                                )
                     ))}
                     </div>
                 ))}
