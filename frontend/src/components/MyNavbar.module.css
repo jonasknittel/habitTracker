@@ -1,0 +1,66 @@
+:root {
+    --light-grey: #878787;
+    --darker-grey: #6e6e6e;
+}
+
+.end {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 2vw;
+    padding-right: 1vw;
+}
+
+.usernameText {
+    font-weight: 500;   /* font-medium */
+    margin: 0;          /* m-0 */
+    font-size: 1.5vw;
+}
+
+.iconContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 3vw;
+    width: 3vw;
+    border-radius: 50%;
+    background-color: lightgrey;
+    transition: filter 300ms;
+}
+
+.iconContainer:hover {
+    filter: brightness(1.1);
+}
+
+.dropdown {
+    position: absolute;
+    top: 50px;         /* directly below the parent */
+    transform: translateX(-90%);
+    width: 300px;
+    border: 2px solid var(--darker-grey);
+    border-radius: 10px;
+    background-color: var(--light-grey);
+    padding: 1rem;
+    overflow: hidden;
+}
+
+.menuItem {
+    height: 50px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    transition: background 300ms;
+    padding: 0.5rem;
+    gap: 20px;
+
+    text-decoration: none;
+    color: black;
+}
+
+.menuItem:hover {
+    background-color: var(--darker-grey);
+}
+
+.iconRight {
+    margin-left: auto;
+}
