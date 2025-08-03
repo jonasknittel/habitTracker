@@ -1,6 +1,6 @@
 :root {
-    --light-grey: #878787;
-    --darker-grey: #6e6e6e;
+    --light-grey: #fff;
+    --darker-grey: #222;
 }
 
 .end {
@@ -37,11 +37,12 @@
     top: 50px;         /* directly below the parent */
     transform: translateX(-90%);
     width: 300px;
-    border: 2px solid var(--darker-grey);
+
     border-radius: 10px;
     background-color: var(--light-grey);
     padding: 1rem;
     overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
 .menuItem {

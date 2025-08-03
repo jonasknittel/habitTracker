@@ -30,6 +30,7 @@ export default function CalendarCard() {
                     style={{ 
                         display: "flex", 
                         flexDirection:"column",
+                        gap: "8px",
                         justifyContent:"space-evenly", 
                         width: "4%",
                         }}>
@@ -40,7 +41,8 @@ export default function CalendarCard() {
                                 height:"13%", 
                                 display: "flex",
                                 alignItems: "center",
-                                fontWeight: "bold"
+                                fontWeight: "bold",
+                                fontSize: "1.5vw"
                             }}>{weekdays[i]}</div>
                     ))}
                 </div>
@@ -51,14 +53,15 @@ export default function CalendarCard() {
                             <div key={i} 
                                 style={{ 
                                     backgroundColor: (Math.random() < 0.7) ? "#FADF63" : "#D3D3D3", // random color generator
-                                    width: "90%", 
+                                    width: "100%", 
                                     height:"13%", 
                                     borderRadius:"25%",
                                     display: "flex",
                                     alignItems: "center",
                                     justifyContent: "center",
                                     textAlign:"center",
-                                    fontWeight: "bold"
+                                    fontWeight: "bold",
+                                    fontSize: "1.2vw"
                                 }}>
                                     {days[j][6 - i].getDate()}
                                 </div>

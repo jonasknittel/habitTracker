@@ -30,8 +30,8 @@ export default function MyNavbar() {
 
     const handleUserUpdate = async () => {
         const payload: any = {};
-        if (newUsername.trim() && newUsername !== username) payload.name = newUsername;
-        if (newEmail.trim() && newEmail !== email) payload.email = newEmail;
+        if (newUsername !== username) payload.name = newUsername;
+        if (newEmail !== email) payload.email = newEmail;
 
         if (Object.keys(payload).length === 0) {
             setEditing(null);

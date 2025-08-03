@@ -11,5 +11,5 @@ export const updateUser = (data: { name?: string, email?: string}) => {
 }
 
 export const deleteUser = () => {
-    return axios.delete(`${API_BASE_URL}/api/users/`);
+    return axios.delete(`${API_BASE_URL}/api/users/`, { withCredentials: true});
 }
