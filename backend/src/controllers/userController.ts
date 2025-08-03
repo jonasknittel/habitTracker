@@ -1,9 +1,12 @@
 import { Response } from 'express';
 import { UserRequest } from '../models/userRequest';
 import db from '../db/database';
+import path from 'path';
 
 export const getUser = (req: UserRequest, res: Response) => {
     const userId = req.userId;
+
+    console.log(`[${path.basename(__filename)}]`, 'getUser with userId: ', userId);
 
     db.all('SELECT * FROM users WHERE id = ?',
         [userId], (err, row) => {
@@ -11,7 +14,7 @@ export const getUser = (req: UserRequest, res: Response) => {
                 console.error('DB error:', err.message);
                 return res.status(500).json({ error: 'Database error' });
             }
-            console.log(row);
+            
             res.json(row);
         }
     )
@@ -64,7 +67,7 @@ export const updateUser = (req:UserRequest, res:Response) => {
 export const deleteUser = (req: UserRequest, res: Response) => {
   const userId = req.userId;
 
-  console.log("deleting user: ", {userId})
+  console.log(`[${path.basename(__filename)}]`, 'deleteUser with userId: ', userId);
   db.run(
     'DELETE FROM users WHERE id = ?',
     [userId],
@@ -78,7 +81,7 @@ export const deleteUser = (req: UserRequest, res: Response) => {
         return res.status(404).json({ error: 'User not found or not yours' });
       }
 
-      res.clearCookie('userId');
+      res.clearCookie('userId', { path: '/'});
       res.json({ success: true, deletedId: userId });
     }
   );
