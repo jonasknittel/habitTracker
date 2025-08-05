@@ -1,11 +1,15 @@
+import { HabitEntry } from "./HabitEntry";
+
 export class Habit {
+    id: number;
     name: string;
     frequency: string;
-    id: number;
+    habitEntries: HabitEntry[] = [];
 
-    constructor(name = 'new Habit', frequency = 'daily') {
+    constructor(id: number, name: string, frequency: string, habitEntries: HabitEntry[] = []) {
+        this.id = id;
         this.name = name;
         this.frequency = frequency;
-        this.id = Date.now();
+        this.habitEntries = habitEntries;
     }
 }

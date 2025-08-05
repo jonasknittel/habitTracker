@@ -14,21 +14,20 @@ export default function Home() {
     const fetchHabits = async () => {
       try {
         const response = await getHabits();
-        setHabits(response.data); // assuming habits come in response.data
+        setHabits(response); // assuming habits come in response.data
       } catch (error) {
         console.error('Fehler beim Laden der Habits:', error);
       }}
     fetchHabits();
   }, []);
 
-  const handleAddHabit = () => {
-    addHabit();
-    setHabits(prevHabits => [...prevHabits, new Habit()]);
+  const handleAddHabit = async () => {
+    const createdHabit = await addHabit(); // muss Promise<Habit> zurückgeben
+    setHabits(prev => [...prev, new Habit(createdHabit.id, createdHabit.name, createdHabit.frequency)]);
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', width: '90%', margin: '0 auto', paddingTop: '2rem', alignItems: 'center', gap: '5vw' }}>
-        <CalendarCard/>
+    <div style={{ display: 'flex', flexDirection: 'column', width: '90%', margin: '0 auto', paddingTop: '2rem', paddingBottom: '2rem', alignItems: 'center', gap: '5vw' }}>
         {habits.map((habit, i) => (
           <div
             key={i}
@@ -40,7 +39,7 @@ export default function Home() {
               fontSize: '1.2rem',
             }}
           >
-            {habit.name}
+            {<CalendarCard key={habits[i].id} habit={habits[i]} />}
           </div>
         ))}
         <Button 
@@ -49,7 +48,7 @@ export default function Home() {
           style={{
             width: '6rem',
             height: '6rem',
-            padding: 0,
+            padding: '0px, 0px, 100px',
             fontSize: '10vw'
           }}
           pt={{
