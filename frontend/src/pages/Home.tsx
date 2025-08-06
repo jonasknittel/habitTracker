@@ -1,7 +1,7 @@
 // src/pages/Home.tsx
 import CalendarCard from '../components/CalendarCard';
 import { Button } from 'primereact/button';
-import { getHabits, addHabit } from '../api/habitApi'
+import { getHabits, addHabit, saveHabit } from '../api/habitApi'
 import { useEffect, useState } from 'react';
 import { Habit } from '../models/Habit';
 
@@ -9,12 +9,13 @@ import { Habit } from '../models/Habit';
 export default function Home() {
   // Load habits
   const [habits, setHabits] = useState<Habit[]>([]);
+  const [editing, setEditing] = useState<number[]>([])
 
   useEffect(() => {
     const fetchHabits = async () => {
       try {
         const response = await getHabits();
-        setHabits(response); // assuming habits come in response.data
+        setHabits(response);
       } catch (error) {
         console.error('Fehler beim Laden der Habits:', error);
       }}
@@ -26,8 +27,19 @@ export default function Home() {
     setHabits(prev => [...prev, new Habit(createdHabit.id, createdHabit.name, createdHabit.frequency)]);
   }
 
+  const enableEditing = (id: number) => {
+    setEditing((prev) => [...prev, id]);
+  }
+
+  const saveEdit = (habit: Habit) => {
+
+    setEditing((prev) => prev.filter((item) => item !== habit.id));
+
+  }
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', width: '90%', margin: '0 auto', paddingTop: '2rem', paddingBottom: '2rem', alignItems: 'center', gap: '5vw' }}>
+        <>EDITING: {editing}</>
         {habits.map((habit, i) => (
           <div
             key={i}
@@ -39,7 +51,12 @@ export default function Home() {
               fontSize: '1.2rem',
             }}
           >
-            {<CalendarCard key={habits[i].id} habit={habits[i]} />}
+            {<CalendarCard 
+                    isEditing={editing.includes(habits[i].id)}
+                    saveEdit={saveEdit}
+                    enableEditing={enableEditing} 
+                    key={habits[i].id} 
+                    habit={habits[i]} />}
           </div>
         ))}
         <Button 

@@ -4,17 +4,30 @@ import { Button } from "primereact/button";
 
 import styles from "./CalendarCard.module.css";
 import { Habit } from "../models/Habit";
+import { useState } from "react";
 
 type Props = {
     habit: Habit;
+    enableEditing: (id: number) => void;
+    saveEdit: (habit: Habit) => void;
+    isEditing: boolean;
 }
 
-export default function CalendarCard({ habit }: Props) {
-
-    const status = true;
+export default function CalendarCard({ 
+                                    habit,
+                                    enableEditing, 
+                                    saveEdit, 
+                                    isEditing 
+                                }: Props) {
+    
+    const [selectedValue, setSelectedValue] = useState<string | null>(null);
+    const [inputValue, setInputValue] = useState("");
+                                    
     const weekdays = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
-
-    const options = ["daily", "weekly"];
+    const options=[
+        { label: 'Daily', value: 'daily' },
+        { label: 'Weekly', value: 'weekly' },
+      ]
 
     const today = new Date();
     const weekday = today.getDay() === 0 ? 7 : today.getDay();
@@ -35,11 +48,42 @@ export default function CalendarCard({ habit }: Props) {
     return (
         <Card style={{ display: "flex", justifyContent: "center" }}>
             <div style={{ display: "flex", flexDirection:"row", justifyContent: "space-between" }}>
-                <div style={{ fontWeight: "bolder", fontSize: "2vw", marginBottom:"2vw"}}>{habit.name}</div>
-                <div style={{ fontWeight: "bolder", fontSize: "2vw", marginBottom:"2vw"}}>{habit.frequency}</div>
-                <Button style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "3vw", backgroundColor: "#D3D3D3"}}>
-                    <i className="pi pi-pencil"></i>
-                </Button>
+                {/* isEditing CHECK */}
+                {!isEditing ? (
+                    <>
+                        <div style={{ fontWeight: "bolder", fontSize: "2vw", marginBottom:"2vw"}}>{habit.name}</div>
+                        <div style={{ fontWeight: "bolder", fontSize: "2vw", marginBottom:"2vw"}}>{habit.frequency}</div>
+                        <Button style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "3vw", backgroundColor: "#D3D3D3"}}
+                            onClick={() => (enableEditing(habit.id))}
+                        >
+                            <i className="pi pi-pencil"></i>
+                        </Button>
+                    </>
+                 ) : (
+                    <>
+                        <input 
+                            value={inputValue} 
+                            onChange={(e) => setInputValue(e.target.value)}
+                            placeholder={habit.name} 
+                            style={{ fontWeight: "bolder", fontSize: "2vw", marginBottom:"2vw"}}
+                        />
+                        <Dropdown 
+                            value={selectedValue} 
+                            placeholder={habit.frequency} 
+                            options={options}
+                            onChange={(e) => setSelectedValue(e.value)}
+                            style={{ fontWeight: "bolder", fontSize: "2vw", marginBottom:"2vw"}}
+                        />
+                        <Button style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "3vw", backgroundColor: "#D3D3D3"}}
+                            onClick={() => {
+
+                                (saveEdit(habit));
+                            }}
+                        >
+                            <i className="pi pi-save"></i>
+                        </Button>
+                    </>
+                 )}
             </div>
             <div style={{ border: "1px", display: "flex", justifyContent: "space-evenly", height: "20vw", width: "85vw", gap: "8px" }}>
                 <div 

@@ -17,3 +17,9 @@ export const addHabit = async(): Promise <Habit> => {
 
     return res.data;
 }
+
+export const saveHabit = async(habit: Habit): Promise<Habit> => {
+    const res = await axios.put(`${API_BASE_URL}/api/habits/${habit.id}`, habit, {withCredentials: true})
+
+    return res.data;
+}
