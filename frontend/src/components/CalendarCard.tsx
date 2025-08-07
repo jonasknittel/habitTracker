@@ -10,14 +10,16 @@ type Props = {
     habit: Habit;
     enableEditing: (id: number) => void;
     saveEdit: (habit: Habit) => void;
+    handleDeleteHabit: (id: number) => void;
     isEditing: boolean;
 }
 
 export default function CalendarCard({ 
                                     habit,
-                                    enableEditing, 
-                                    saveEdit, 
-                                    isEditing 
+                                    enableEditing,
+                                    saveEdit,
+                                    handleDeleteHabit,
+                                    isEditing
                                 }: Props) {
     
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
@@ -56,7 +58,7 @@ export default function CalendarCard({
                         <Button style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "3vw", backgroundColor: "#D3D3D3"}}
                             onClick={() => (enableEditing(habit.id))}
                         >
-                            <i className="pi pi-pencil"></i>
+                            <i className="pi pi-pencil inverted-icon" style={{filter: "invert(1)"}}></i>
                         </Button>
                     </>
                  ) : (
@@ -74,14 +76,29 @@ export default function CalendarCard({
                             onChange={(e) => setSelectedValue(e.value)}
                             style={{ fontWeight: "bolder", fontSize: "2vw", marginBottom:"2vw"}}
                         />
-                        <Button style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "3vw", backgroundColor: "#D3D3D3"}}
-                            onClick={() => {
+                        <div style={{ display: "flex", gap: "1vw" }}>
+                            <Button style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "3vw", backgroundColor: "#D3D3D3"}}
+                                onClick={() => {
+                                    if (selectedValue != null) {
+                                        habit.frequency = selectedValue;
+                                    }
 
-                                (saveEdit(habit));
-                            }}
-                        >
-                            <i className="pi pi-save"></i>
-                        </Button>
+                                    if (inputValue != "") {
+                                        habit.name = inputValue
+                                    }
+                                    (saveEdit(habit));
+                                }}
+                            >
+                                <i className="pi pi-save" style={{filter: "invert(1)"}}></i>
+                            </Button>
+                            <Button style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "3vw", backgroundColor: "#D3D3D3"}}
+                                onClick={() => {
+                                    handleDeleteHabit(habit.id);
+                                }}
+                            >
+                                <i className="pi pi-trash" style={{filter: "invert(1)"}}></i>
+                            </Button>
+                        </div>
                     </>
                  )}
             </div>
@@ -90,10 +107,10 @@ export default function CalendarCard({
                     style={{ 
                         display: "flex", 
                         flexDirection:"column",
-                        gap: "8px",
+                        gap: "1vw",
                         justifyContent:"space-evenly", 
                         width: "4%",
-                        }}>
+                    }}>
                     {Array.from({ length: 7 }).map((_, i) => (
                         <div key={i} 
                             style={{ 

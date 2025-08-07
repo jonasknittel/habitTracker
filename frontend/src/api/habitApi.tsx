@@ -18,8 +18,18 @@ export const addHabit = async(): Promise <Habit> => {
     return res.data;
 }
 
-export const saveHabit = async(habit: Habit): Promise<Habit> => {
+export const saveHabit = async (habit: Habit): Promise<Habit> => {
     const res = await axios.put(`${API_BASE_URL}/api/habits/${habit.id}`, habit, {withCredentials: true})
 
     return res.data;
+}
+
+export const deleteHabit = async(id:number): Promise<Boolean> => {
+    try {
+        const res = await axios.delete(`${API_BASE_URL}/api/habits/${id}`, {withCredentials: true});
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
 }

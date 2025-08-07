@@ -1,7 +1,7 @@
 // src/pages/Home.tsx
 import CalendarCard from '../components/CalendarCard';
 import { Button } from 'primereact/button';
-import { getHabits, addHabit, saveHabit } from '../api/habitApi'
+import { getHabits, addHabit, saveHabit, deleteHabit } from '../api/habitApi'
 import { useEffect, useState } from 'react';
 import { Habit } from '../models/Habit';
 
@@ -27,14 +27,22 @@ export default function Home() {
     setHabits(prev => [...prev, new Habit(createdHabit.id, createdHabit.name, createdHabit.frequency)]);
   }
 
-  const enableEditing = (id: number) => {
+  const enableEditing = async (id: number) => {
     setEditing((prev) => [...prev, id]);
   }
 
-  const saveEdit = (habit: Habit) => {
-
+  const saveEdit = async (habit: Habit) => {
+    const saveEdit = await saveHabit(habit);
     setEditing((prev) => prev.filter((item) => item !== habit.id));
 
+  }
+
+  const handleDeleteHabit = async (id: number) => {
+    const success = await deleteHabit(id);
+    if (success) {
+      setHabits((prev) => prev.filter((item) => item.id !== id));
+      setEditing((prev) => prev.filter((item) => item !== id));
+    }
   }
 
   return (
@@ -54,7 +62,8 @@ export default function Home() {
             {<CalendarCard 
                     isEditing={editing.includes(habits[i].id)}
                     saveEdit={saveEdit}
-                    enableEditing={enableEditing} 
+                    enableEditing={enableEditing}
+                    handleDeleteHabit={handleDeleteHabit}
                     key={habits[i].id} 
                     habit={habits[i]} />}
           </div>
