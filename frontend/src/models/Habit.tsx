@@ -12,4 +12,9 @@ export class Habit {
         this.frequency = frequency;
         this.habitEntries = habitEntries;
     }
+
+    getDates = (): (Date | null)[] => {
+        return this.habitEntries.map((item) => item.completedAt ? new Date(item.completedAt) : null)
+
+    }
 }

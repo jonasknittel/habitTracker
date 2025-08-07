@@ -2,9 +2,9 @@ import { Card } from "primereact/card";
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 
-import styles from "./CalendarCard.module.css";
 import { Habit } from "../models/Habit";
 import { useState } from "react";
+import { createHabitEntry } from "../api/habitEntryApi";
 
 type Props = {
     habit: Habit;
@@ -24,6 +24,7 @@ export default function CalendarCard({
     
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
     const [inputValue, setInputValue] = useState("");
+    const [dates, setDates] = useState<(Date | null)[]>(habit.getDates());
                                     
     const weekdays = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
     const options=[
@@ -46,6 +47,9 @@ export default function CalendarCard({
         })
     );
 
+    const handleClick = (day: Date) => {
+        setDates(prev => [...prev, day])
+    }
 
     return (
         <Card style={{ display: "flex", justifyContent: "center" }}>
@@ -127,9 +131,16 @@ export default function CalendarCard({
                     <div key={j} style={{ display: "flex", flexDirection:"column", gap: "8px", alignItems:"center", justifyContent:"space-evenly", width: "3.5%" }}>
                     {Array.from({ length: 7 }).map((_, i) => (
                         (days[j][6 - i] <= today) ? (
-                            <div key={i} 
+                            <div 
+                                key={i} 
+                                onClick={() => {
+                                    handleClick(days[j][6 - i]);
+                                }}
+                                role="button"
+                                tabIndex={i}
+                                
                                 style={{ 
-                                    backgroundColor: (Math.random() < 0.7) ? "#FADF63" : "#D3D3D3", // random color generator
+                                    backgroundColor: (dates.includes(days[j][6 - i])) ? "#FADF63" : "#D3D3D3", // random color generator
                                     width: "100%", 
                                     height:"13%", 
                                     borderRadius:"25%",
@@ -138,7 +149,8 @@ export default function CalendarCard({
                                     justifyContent: "center",
                                     textAlign:"center",
                                     fontWeight: "bold",
-                                    fontSize: "1.2vw"
+                                    fontSize: "1.2vw",
+                                    cursor: 'pointer'
                                 }}>
                                     {days[j][6 - i].getDate()}
                                 </div>
