@@ -1,6 +1,7 @@
 import { Response } from 'express';
 import { UserRequest } from '../models/userRequest';
 import db from '../db/database';
+import path from 'path';
 
 
 export const getAllHabitEntries = (req: UserRequest, res: Response) => {
@@ -25,20 +26,22 @@ export const getAllHabitEntries = (req: UserRequest, res: Response) => {
 
 export const createHabitEntry = (req: UserRequest, res: Response) => {
     const { habitId } = req.params;
-    let { time, comment } = req.body;
+    let { time } = req.body;
 
     if (!time) {
         time = new Date().toISOString(); // use current time in ISO format
     }
 
     if (!habitId) {
-        return res.status(400).json({ error: 'Missing habitId or userId' });
+        return res.status(400).json({ error: 'Missing habitId' });
     }
 
+    
+
     db.run(
-        `INSERT INTO habitEntries (habitId, completedAt, comment)
-         VALUES (?, ?, ?)`,
-        [habitId, time, comment],
+        `INSERT INTO habitEntries (habitId, completedAt)
+         VALUES (?, ?)`,
+        [habitId, time ],
         function (err) {
             if (err) {
                 console.error('DB error:', err.message);
@@ -49,10 +52,11 @@ export const createHabitEntry = (req: UserRequest, res: Response) => {
                 id: this.lastID,
                 habitId,
                 time,
-                comment,
             });
         }
     );
+
+    console.log(`[${path.basename(__filename)}]`, 'new habit Entry for habit: ', habitId);
 }
 
 export const getSingleHabitEntry = (req: UserRequest, res: Response) => {

@@ -4,7 +4,7 @@ import { Button } from "primereact/button";
 
 import { Habit } from "../models/Habit";
 import { useState } from "react";
-import { createHabitEntry } from "../api/habitEntryApi";
+import { createHabitEntry, getHabitEntriesById } from "../api/habitEntryApi";
 
 type Props = {
     habit: Habit;
@@ -24,7 +24,7 @@ export default function CalendarCard({
     
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
     const [inputValue, setInputValue] = useState("");
-    const [dates, setDates] = useState<(Date | null)[]>(habit.getDates());
+    const [dates, setDates] = useState<(Date | null)[]>(getHabitEntriesById(habit.id));
                                     
     const weekdays = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
     const options=[
@@ -47,8 +47,15 @@ export default function CalendarCard({
         })
     );
 
-    const handleClick = (day: Date) => {
-        setDates(prev => [...prev, day])
+    const handleClick = async (day: Date) => {
+        try {
+            const res = await createHabitEntry(habit.id, day); // wirft bei Fehler
+            if (res) {
+                setDates(prev => [...prev, day]);
+            }
+        } catch (err) {
+            console.error('Fehler beim Erstellen:', err);
+        }
     }
 
     return (
