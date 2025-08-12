@@ -11,6 +11,9 @@ A simple habit tracker to create habits, edit user data, and mark completed days
 ## Currently Not Working
 - Deleting habit entries
 
+## Screenshot
+![alt text](image.png)
+
 ## Tech Stack
 Frontend: React + TypeScript + Axios  
 Backend: Node.js + Express  
