@@ -26,7 +26,8 @@ Database: SQLite
 - Move more styling into CSS
 - Plan React components ahead of time
 - Design and document APIs first
+- use ORM
 
 
-Project time: 2 weeks
+Project time: 2 weeks  
 time spent: approximately 18 hours
