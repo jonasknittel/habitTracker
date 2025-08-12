@@ -7,6 +7,8 @@ import path from 'path';
 export const getAllHabitEntries = (req: UserRequest, res: Response) => {
     const { habitId } = req.params;
 
+    
+
     if (!habitId) {
         return res.status(400).json({ error: 'Missing habitId' });
     }
@@ -18,7 +20,7 @@ export const getAllHabitEntries = (req: UserRequest, res: Response) => {
                 console.error('DB error:', err.message);
                 return res.status(500).json({ error: 'Database error' });
             }
-
+            console.log(`[${path.basename(__filename)}]`, `get all habit entries, number of entries: ${rows.length}`);
             res.json(rows);
         }
     );
@@ -26,10 +28,12 @@ export const getAllHabitEntries = (req: UserRequest, res: Response) => {
 
 export const createHabitEntry = (req: UserRequest, res: Response) => {
     const { habitId } = req.params;
-    let { time } = req.body;
+    let { day } = req.body;
 
-    if (!time) {
-        time = new Date().toISOString(); // use current time in ISO format
+    console.log(`[${path.basename(__filename)}]`, `time: ${day}`);
+
+    if (!day) {
+        day = new Date().toISOString(); // use current time in ISO format
     }
 
     if (!habitId) {
@@ -41,7 +45,7 @@ export const createHabitEntry = (req: UserRequest, res: Response) => {
     db.run(
         `INSERT INTO habitEntries (habitId, completedAt)
          VALUES (?, ?)`,
-        [habitId, time ],
+        [habitId, day ],
         function (err) {
             if (err) {
                 console.error('DB error:', err.message);
@@ -51,7 +55,7 @@ export const createHabitEntry = (req: UserRequest, res: Response) => {
             return res.status(201).json({
                 id: this.lastID,
                 habitId,
-                time,
+                day,
             });
         }
     );
@@ -104,12 +108,18 @@ export const updateHabitEntry = (req: UserRequest, res: Response) => {
 }
 
 export const deleteHabitEntry = (req: UserRequest, res: Response) => {
-    const { habitId, entryId } = req.params;
+    const { habitId } = req.params;
+    const date = req.body.day;
+
+    const startOfDay = `${date} 00:00:00`;
+    const endOfDay = `${date} 23:59:59`;
+
+    console.log(`[${path.basename(__filename)}]`, 'delete habit Entries from: ', startOfDay , endOfDay);
 
     db.run(
         `DELETE FROM habitEntries
-         WHERE id = ? AND habitId = ?`,
-        [entryId, habitId],
+         WHERE completedAt BETWEEN ? AND ? AND habitId = ?`,
+        [startOfDay, endOfDay, habitId],
         function (err) {
             if (err) {
                 console.error('DB error:', err.message);
@@ -120,7 +130,7 @@ export const deleteHabitEntry = (req: UserRequest, res: Response) => {
                 return res.status(404).json({ error: 'Habit entry not found' });
             }
 
-            res.status(204).send(); // No content
+            res.status(204).send();
         }
     );
 }

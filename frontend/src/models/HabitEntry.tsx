@@ -10,4 +10,8 @@ export class HabitEntry {
         this.completedAt = completedAt;
         this.note = note;
     }
+
+    getDate() {
+        return this.completedAt;
+    }
 }

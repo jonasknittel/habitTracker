@@ -3,8 +3,8 @@ import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 
 import { Habit } from "../models/Habit";
-import { useState } from "react";
-import { createHabitEntry, getHabitEntriesById } from "../api/habitEntryApi";
+import { useState, useEffect } from "react";
+import { createHabitEntry, getHabitEntriesById, deleteHabitEntry } from "../api/habitEntryApi";
 
 type Props = {
     habit: Habit;
@@ -24,13 +24,23 @@ export default function CalendarCard({
     
     const [selectedValue, setSelectedValue] = useState<string | null>(null);
     const [inputValue, setInputValue] = useState("");
-    const [dates, setDates] = useState<(Date | null)[]>(getHabitEntriesById(habit.id));
+    const [dates, setDates] = useState<(Date | null)[]>([]);
                                     
     const weekdays = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"];
     const options=[
         { label: 'Daily', value: 'daily' },
         { label: 'Weekly', value: 'weekly' },
-      ]
+    ]
+    
+    useEffect(() => {
+        const fetchEntries = async () => {
+            const habitEntries = await getHabitEntriesById(habit.id);
+
+            setDates(habitEntries);
+        }
+        
+        fetchEntries();
+    }, [habit.id]);
 
     const today = new Date();
     const weekday = today.getDay() === 0 ? 7 : today.getDay();
@@ -49,7 +59,13 @@ export default function CalendarCard({
 
     const handleClick = async (day: Date) => {
         try {
-            const res = await createHabitEntry(habit.id, day); // wirft bei Fehler
+                if (dates.some(d => d && isSameDay(d, day))) {
+                    const res = await deleteHabitEntry(habit.id, day);
+                    if (res) {
+                        setDates(prev => prev.filter(d => !isSameDay(d!, day)));
+                }
+            }
+            const res = await createHabitEntry(habit.id, day);
             if (res) {
                 setDates(prev => [...prev, day]);
             }
@@ -57,6 +73,11 @@ export default function CalendarCard({
             console.error('Fehler beim Erstellen:', err);
         }
     }
+
+    const isSameDay = (a: Date, b: Date) =>
+        a.getFullYear() === b.getFullYear() &&
+        a.getMonth() === b.getMonth() &&
+        a.getDate() === b.getDate();
 
     return (
         <Card style={{ display: "flex", justifyContent: "center" }}>
@@ -147,7 +168,9 @@ export default function CalendarCard({
                                 tabIndex={i}
                                 
                                 style={{ 
-                                    backgroundColor: (dates.includes(days[j][6 - i])) ? "#FADF63" : "#D3D3D3", // random color generator
+                                    backgroundColor: dates.some(d => d && isSameDay(d, days[j][6 - i]))
+                                    ? "#FADF63" 
+                                    : "#D3D3D3",
                                     width: "100%", 
                                     height:"13%", 
                                     borderRadius:"25%",
